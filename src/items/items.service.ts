@@ -8,9 +8,17 @@ import { updateItemInput } from './dto/update-item.input';
 export class ItemsService {
     constructor(private readonly itemsRepository: ItemRepository) { }
 
-    async viewItems(id: string): Promise<Item | any> {
+    // async viewAllNotification(itemId: string): Promise<Notification | any> {
+    //     try {
+    //         return await this.itemsRepository.viewAllNotification(itemId);
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
+
+    async viewAllItems(id: string): Promise<Item | any> {
         try {
-            const item = await this.itemsRepository.viewItems(id)
+            const item = await this.itemsRepository.viewAllItems(id)
             return item;
         } catch (error) {
             throw error;

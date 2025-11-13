@@ -17,7 +17,9 @@ export async function saveToRedis(key: string, value: string) {
 
 
 export async function getFromRedis(key: string): Promise<string | null> {
-  return await redis.get(key);
+  const result = await redis.get(key);
+  if (!result || result === '[]' || result === '{}') return null;
+  return result;
 }
 
 export async function deleteFromRedis(key: string): Promise<boolean> {

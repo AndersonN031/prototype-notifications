@@ -1,10 +1,12 @@
-import { Body, Controller, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationsInput } from './dto/create-notifications.input';
 
 @Controller('notifications')
 export class NotificationsController {
     constructor(private notificationsService: NotificationsService) { }
+
+    
 
     @Post(':itemId')
     async sendNotifications(

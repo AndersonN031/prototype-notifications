@@ -3,52 +3,49 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { CreateNotificationsInput } from "./dto/create-notifications.input";
 import { getFromRedis, saveToRedis } from "src/utils/redis.client";
 import { v4 as uuidV4 } from "uuid"
+import { KEY_NOT_FOUND } from "src/items/items.constants";
+import { NotificationsGateway } from "./notifications.gateway";
 
 @Injectable()
 class NotificationRepository {
-    constructor(private prisma: PrismaService) { }
-
-    //viewNotifications()
-
+    constructor(
+        private prisma: PrismaService,
+        private readonly notificationsGateway: NotificationsGateway
+    ) { }
 
     async sendNotifications(itemId: string, data: CreateNotificationsInput): Promise<Notification | any> {
-        const { message, receiverId } = data;
+        let { message, receiverId, read } = data;
 
         const redisKey = `item:${itemId}`
 
         const itemData = await getFromRedis(redisKey);
 
         if (!itemData) {
-            throw new NotFoundException(`Nenhuma chave encontrada no Redis para ${redisKey}`);
+            throw new NotFoundException([KEY_NOT_FOUND]);
         }
 
         const item = JSON.parse(itemData);
 
-        const id = uuidV4()
+
         const newNotification = {
             id: uuidV4(),
             message,
             receiverId,
-            read: false,
-            createdAt: new Date().toString(),
+            read,
+            createdAt: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
 
         }
 
         if (!item.notifications) item.notifications = [];
-
         item.notifications.push(newNotification);
 
         await saveToRedis(redisKey, JSON.stringify(item));
 
+        this.notificationsGateway.emitNotificationToUser(receiverId, newNotification);
+
         return newNotification;
 
     }
-
-
-    //readNotifications()
-
-
-    //deleteNotifications()
 
 }
 

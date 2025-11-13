@@ -1,8 +1,17 @@
+import { IsBoolean, IsString } from "class-validator";
+
 class CreateNotificationsInput {
+    @IsString()
     message: string;
+
+    @IsString()
     itemId: string;
+
+    @IsString()
     receiverId: string;
-    read?: false; 
+
+    @IsBoolean()
+    read?: false;
 }
 
 export { CreateNotificationsInput };

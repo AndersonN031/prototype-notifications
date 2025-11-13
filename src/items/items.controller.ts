@@ -2,15 +2,22 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/
 import { ItemsService } from './items.service';
 import { CreateItemInput } from './dto/create-item.input';
 import { Item } from './item.entity';
-import { updateItemInput } from './dto/update-item.input';
+
 
 @Controller('items')
 export class ItemsController {
     constructor(private itemsService: ItemsService) { }
 
+    // @Get('/:id/notifications')
+    // async viewNotification(@Param('id') id: string, @Res() res): Promise<Notification> {
+    //     const notification = await this.itemsService.viewAllNotification(id);
+    //     return res.status(200).json(notification)
+
+    // }
+    
     @Get('/:id')
-    async viewItems(@Param('id') id: string, @Res() res) {
-        const item = await this.itemsService.viewItems(id);
+    async viewAllItems(@Param('id') id: string, @Res() res) {
+        const item = await this.itemsService.viewAllItems(id);
         return res.status(200).json(item);
     }
 
